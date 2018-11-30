@@ -6,6 +6,6 @@ This project defines the data structures of a blockchain as protocol buffers (ht
 Build
 =====
 
-    ./build --go_out=<go-output>
+    ./build.sh --go_out=<go-output>
 
-    ./build --javalite_out=<java-output>
+    ./build.sh --javalite_out=<java-output>
