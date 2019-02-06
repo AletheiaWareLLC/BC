@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Aletheia Ware LLC
+ * Copyright 2019 Aletheia Ware LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,49 +17,11 @@
 syntax = "proto3";
 
 option go_package = "github.com/AletheiaWareLLC/bcgo";
-option java_outer_classname = "BC";
+option java_outer_classname = "BCProto";
 option java_package = "com.aletheiaware.bc";
 option optimize_for = LITE_RUNTIME;
 
 package bc;
-
-message Reference {
-    // Timestamp (nanoseconds) when the referenced item was created.
-    fixed64 timestamp = 1;
-    // Name of the channel holding the referenced item.
-    string channel_name = 2;
-    // Hash of the block holding the referenced item.
-    bytes block_hash = 3;
-    // Hash of the message holding the referenced item.
-    bytes message_hash = 4;
-}
-
-message Message {
-    // Timestamp (nanoseconds) when the message was created.
-    fixed64 timestamp = 1;
-    // Hash of the message sender's public key.
-    bytes sender_key_hash = 2;
-    message Access {
-        // Hash of the public key granted access.
-        bytes public_key_hash = 1;
-        // The secret access key used to encrypt the payload, encrypted by the public key.
-        bytes secret_key = 2;
-    }
-    // The message's recipients represented as a list of accesses granted.
-    repeated Access recipient = 3;
-    // Holds message content, optionally encrypted with a secret key.
-    bytes payload = 4;
-    // Signature of payload (signed by the message sender's private key).
-    bytes signature = 5;
-    // References to previous messages.
-    repeated Reference reference = 6;
-}
-
-message BlockEntry {
-    // Hash of the message.
-    bytes message_hash = 1;
-    Message message = 2;
-}
 
 message Block {
     // Timestamp (nanoseconds) when the block was created.
@@ -70,10 +32,105 @@ message Block {
     fixed64 length = 3;
     // Hash of the previous block in the chain.
     bytes previous = 4;
-    // Hash of the block miner's public key.
-    bytes miner_key_hash = 5;
+    // Alias of the block miner's public key.
+    string miner = 5;
     // The nonce mined to reach threshold.
     fixed64 nonce = 6;
-    // The block's entries (list of hash/message pairs).
+    // The block's entries (list of hash/record pairs).
     repeated BlockEntry entry = 7;
+}
+
+message BlockEntry {
+    // Hash of the record.
+    bytes record_hash = 1;
+    Record record = 2;
+}
+
+message Record {
+    // Timestamp (nanoseconds) when the record was created.
+    fixed64 timestamp = 1;
+    // Alias of the record creator's public key.
+    string creator = 2;
+    message Access {
+        // Alias of the public key granted access, empty if public.
+        string alias = 1;
+        // The secret access key used to encrypt the payload.
+        bytes secret_key = 2;
+        // If the alias is set, the secret key will be encrypted by the alias' public key.
+        // The algorithm used to encrypt the secret key.
+        EncryptionAlgorithm encryption_algorithm = 3;
+    }
+    // The list of accesses granted.
+    repeated Access access = 3;
+    // Holds record content, optionally encrypted with a secret key.
+    bytes payload = 4;
+    // The algorithm used to compress the payload.
+    CompressionAlgorithm compression_algorithm = 5;
+    // The algorithm used to encrypt the payload.
+    EncryptionAlgorithm encryption_algorithm = 6;
+    // Signature of payload (signed by the record creator's private key).
+    bytes signature = 7;
+    // The algorithm used to sign the payload.
+    SignatureAlgorithm signature_algorithm = 8;
+    // References to previous records.
+    repeated Reference reference = 9;
+}
+
+message Reference {
+    // Timestamp (nanoseconds) when the referenced item was created.
+    fixed64 timestamp = 1;
+    // Name of the channel holding the referenced item.
+    string channel_name = 2;
+    // Hash of the block holding the referenced item.
+    bytes block_hash = 3;
+    // Hash of the record holding the referenced item.
+    bytes record_hash = 4;
+}
+
+message KeyShare {
+    string alias = 1;
+    bytes public_key = 2;
+    PublicKeyFormat public_format = 3;
+    bytes private_key = 4;
+    PrivateKeyFormat private_format = 5;
+    bytes password = 6;
+}
+
+enum Threshold {
+    NONE = 0;
+    LITE = 264; // 33/64
+    STANDARD = 272; // 17/32
+    PVB_HOUR = 288; // 9/16
+    PVB_DAY = 320; // 5/8
+    PVB_YEAR = 384; // 3/4
+}
+
+enum CompressionAlgorithm {
+    UNKNOWN_COMPRESSION = 0;
+}
+
+enum EncryptionAlgorithm {
+    UNKNOWN_ENCRYPTION = 0;
+    AES_GCM_NOPADDING = 1;
+    PBKDF2WITHHMACSHA1 = 2;
+    RSA_ECB_OAEPPADDING = 3;
+}
+
+enum SignatureAlgorithm {
+    UNKNOWN_SIGNATURE = 0;
+    SHA512WITHRSA = 1;
+    SHA512WITHRSA_PSS = 2;
+}
+
+enum PublicKeyFormat {
+    UNKNOWN_PUBLIC_KEY_FORMAT = 0;
+    PKCS1_PUBLIC = 1;
+    PKIX = 2;
+    X509 = 3;
+}
+
+enum PrivateKeyFormat {
+    UNKNOWN_PRIVATE_KEY_FORMAT = 0;
+    PKCS1_PRIVATE = 1;
+    PKCS8 = 2;
 }
