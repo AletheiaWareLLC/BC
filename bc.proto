@@ -96,15 +96,6 @@ message KeyShare {
     bytes password = 6;
 }
 
-enum Threshold {
-    NONE = 0;
-    LITE = 264; // 33/64
-    STANDARD = 272; // 17/32
-    PVB_HOUR = 288; // 9/16
-    PVB_DAY = 320; // 5/8
-    PVB_YEAR = 384; // 3/4
-}
-
 enum CompressionAlgorithm {
     UNKNOWN_COMPRESSION = 0;
 }
