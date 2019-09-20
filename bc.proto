@@ -19,7 +19,6 @@ syntax = "proto3";
 option go_package = "github.com/AletheiaWareLLC/bcgo";
 option java_outer_classname = "BCProto";
 option java_package = "com.aletheiaware.bc";
-option optimize_for = LITE_RUNTIME;
 
 package bc;
 
