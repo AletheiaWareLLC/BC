@@ -1,7 +1,7 @@
 BC
 ===
 
-This project defines the data structures of a blockchain as protocol buffers (https://developers.google.com/protocol-buffers/), allowing implementations in C, C++, C#, Dart, Go, Java, and/or Python.
+This project defines the data structures of BlockChain as protocol buffers (https://developers.google.com/protocol-buffers/), allowing implementations in C, C++, C#, Dart, Go, Java, and/or Python.
 
 Build
 =====

@@ -17,4 +17,4 @@
 set -e
 set -x
 
-protoc bc.proto $@
+protoc --proto_path=../Crypto --proto_path=. bc.proto $@
