@@ -86,4 +86,6 @@ message Reference {
     bytes block_hash = 3;
     // Hash of the record holding the referenced item.
     bytes record_hash = 4;
+    // Index of block in chain holding the referenced item.
+    fixed64 index = 5;
 }
