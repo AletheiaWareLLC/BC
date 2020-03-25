@@ -75,6 +75,8 @@ message Record {
     crypto.SignatureAlgorithm signature_algorithm = 8;
     // References to previous records.
     repeated Reference reference = 9;
+    // Holds payload meta data.
+    map<string, string> meta = 10;
 }
 
 message Reference {
