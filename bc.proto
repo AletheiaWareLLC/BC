@@ -16,7 +16,7 @@
 
 syntax = "proto3";
 
-option go_package = "github.com/AletheiaWareLLC/bcgo";
+option go_package = "aletheiaware.com/bcgo";
 option java_outer_classname = "BCProto";
 option java_package = "com.aletheiaware.bc";
 
